@@ -43,6 +43,8 @@ card_turtle = trtl.Turtle()  # Draws outlines and numbers
 card_turtle.hideturtle()
 card_turtle.penup()
 card_turtle.speed(0)
+score_turtle = trtl.Turtle()
+score_turtle.hideturtle()
 
 #Lists
 SuitsList = ["Hearts", "Diamonds", "Spades", "Clubs"]
@@ -114,8 +116,10 @@ def MainGameCreate():
     t.goto(-200,-160)
     t.write("Dealer Score:" + str(DealerScore), font=("Arial", 14, "bold"))
 
-    t.goto(160,-160)
-    t.write(player_name + "Score:" + str(PlayerScore), font=("Arial", 14, "bold"))
+    score_turtle.speed(0)
+    score_turtle.penup()
+    score_turtle.goto(160,-160)
+    score_turtle.write(player_name + " Score: " + str(PlayerScore), font=("Arial", 14, "bold"))
 
     global Options
     pen.fillcolor("grey")
@@ -129,6 +133,8 @@ def MainGameCreate():
         pen.forward(40)
         pen.left(90)
     pen.end_fill()
+    pen.penup()
+    pen.goto(-55,-190)
     pen.write("Hit", align="center", font=("Arial", 14, "bold"))
 
     pen.fillcolor("grey")
@@ -142,6 +148,8 @@ def MainGameCreate():
         pen.forward(40)
         pen.left(90)
     pen.end_fill()
+    pen.penup()
+    pen.goto(35,-190)
     pen.write("Stand", align="center", font=("Arial", 14, "bold"))
 
 score_turtle = trtl.Turtle()
@@ -226,15 +234,10 @@ def Blackjack():
     if PlayerScore > 21:
         Chips -= int(bet)
         print("Busted! Chips:", Chips)
-        t.clear()
-        pen.clear()
-        hearts.clear()
-        diamonds.clear()
-        spades.clear()
-        clubs.clear()
         t.penup()
         t.goto(-20, 100)
-        t.write("You lost", align="center", font=("Arial", 20, "bold"))
+        clear_screen()
+        t.write("Busted! You lost!", align="center", font=("Arial", 20, "bold"))
         ReplayGame()
 
 def StartingCards():
@@ -284,6 +287,7 @@ def Dealer():
         DealerScore = DealerScore + TempDealerValue
         pen.clear()
         t.clear()
+        score_turtle.clear()
 
     if DealerScore < PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
         Chips = Chips + int(bet)
@@ -398,39 +402,6 @@ pen.hideturtle()
 pen.penup()
 pen.speed(0)
 
-def YesNoButtons():
-    #Draw Yes button
-    pen.goto(-100, -100)
-    pen.fillcolor("green")
-    pen.begin_fill()
-    for i in range(2):
-        pen.forward(80)
-        pen.left(90)
-        pen.forward(40)
-        pen.left(90)
-    pen.end_fill()
-    pen.goto(-60, -90)
-    pen.write("YES", align="center", font=("Arial", 14, "bold"))
-
-    #Draw No button
-    pen.goto(100, -100)
-    pen.fillcolor("red")
-    pen.begin_fill()
-    for i in range(2):
-        pen.forward(80)
-        pen.left(90)
-        pen.forward(40)
-        pen.left(90)
-    pen.end_fill()
-    pen.goto(140, -90)
-    pen.write("NO", align="center", font=("Arial", 14, "bold"))
-
-    #Display question
-    pen.goto(0, 200)
-    pen.write("Do you want to know the rules?", align="center", font=("Arial", 18, "bold"))
-
-YesNoButtons()
-
 #Click handler
 def on_click(x, y):
     global pen
@@ -438,45 +409,11 @@ def on_click(x, y):
     global Chips
     global DealerScore
     global PlayerScore
-
-    #YES button area
-    if -100 < x < -20 and -100 < y < -60:
-        pen.clear()
-        t.penup()
-        t.goto(-100,160)
-        t.write("The rules are:")
-        writerMove()
-        t.write("Get to as close of a score of 21 without going over")
-        writerMove()
-        t.write("You get 2 cards to start with value on them unless Jack, Queen, King, Ace")
-        writerMove()
-        t.write("Jack, Queen and King are worth 10pts and Ace is worth 11 unless you would be over 21")
-        writerMove()
-        t.write("First you have to bet")
-        writerMove()
-        t.write("You can hit to get 1 more card")
-        writerMove()
-        t.write("You can stand to keep current amount")
-        writerMove()
-        t.write("The dealer then flips their card")
-        writerMove()
-        t.write("If you are closer to 21 but not over you gain what you betted but if you were farther you lose that amount")
-        writerMove()
-        ReplayGame()
-
-    #NO button area
-    elif 100 < x < 180 and -100 < y < -60:
-        pen.clear()
-        t.clear()
-        hearts.clear()
-        diamonds.clear()
-        spades.clear()
-        clubs.clear()
-        BetValue()
-        ReplayGame()
+    global CardSuit
+    global TempPlayerValue
 
     #Continue
-    elif -200 < x < -120 and 200 < y < 240:
+    if -200 < x < -120 and 200 < y < 240:
         clear_screen()
         BetValue()
         CardX = [20,100,160,240,-220,-140,20,100,160,240,-220,-140,0]
@@ -490,16 +427,33 @@ def on_click(x, y):
         Cashout()
 
     #Hit
-    elif -85 < x < -5 and -200 < y < -160:  # Hit
-        Blackjack()  # Update PlayerScore, CardName, CardSuit
-        DrawCards(x, y, CardName, CardSuit)
-        '''update_display()'''
+    elif -85 < x < -5 and -200 < y < -160:
+        score_turtle.clear()
+        CardValue = rand.choice(NumList)
+        CardSuit = rand.choice(SuitsList)
+        FaceCardValue()
+        TempPlayerValue = CardValue
+        PlayerScore += TempDealerValue
+        score_turtle.penup()
+        score_turtle.goto(160,-160)
+        score_turtle.write(player_name + " Score: " + str(PlayerScore), font=("Arial", 14, "bold"))
+        score_turtle.goto(160,-120)
+        score_turtle.write(str(CardName) + " of " + str(CardSuit), font=("Arial", 14, "bold"))
+        if (PlayerScore > 21):
+            Dealer()
+            t.penup()
+            t.goto(-20,0)
+            t.write("Busted! You lost!", align="center", font=("Arial", 20, "bold"))
+            t.goto(-50,-50)
+            t.write(f"You Have {Chips} Chips.", font=("Arial", 14, "bold"))
 
     #Stand
     elif 5 < x < 85 and -200 < y < -160:
         #Player stands then dealer reveals cards
         Dealer()
-        '''update_display()'''
+        t.penup()
+        t.goto(0,-50)
+        t.write(f"You Have {Chips} Chips.", font=("Arial", 14, "bold"))
 
 #Listen for clicks
 screen.onclick(on_click)
@@ -519,6 +473,10 @@ def BetValue():
         bet = trtl.textinput("Bet", "Please enter only valid numbers")
 
 #Begin Playing
+score_turtle.hideturtle()
+chips_turtle.hideturtle()
+ChipsT.hideturtle()
+button_turtle.hideturtle()
 clear_screen()
 BetValue()
 
