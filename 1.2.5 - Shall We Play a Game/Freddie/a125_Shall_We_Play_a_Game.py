@@ -5,7 +5,11 @@ import turtle as trtl
 import random as rand
 import tkinter as tk
 from PIL import Image
-'''import leaderboard as lb'''
+import leaderboard as lb
+
+leaderboard_file_name = "a125_leaderboard.txt"
+leader_names_list = []
+leader_scores_list = []
 
 #Turtle and screen setup
 t = trtl.Turtle()  # Named this to save some time
@@ -368,6 +372,8 @@ def ReplayGame():
         pen.forward(40)
         pen.left(90)
     pen.end_fill()
+    pen.penup()
+    pen.goto(-165,210)
     pen.write("Continue", align="center", font=("Arial", 14, "bold"))
 
     pen.begin_fill()
@@ -380,6 +386,8 @@ def ReplayGame():
         pen.forward(40)
         pen.left(90)
     pen.end_fill()
+    pen.penup()
+    pen.goto(235,210)
     pen.write("Cash Out", align="center", font=("Arial", 14, "bold"))
     PlayerScore = 0
     DealerScore = 0
@@ -425,6 +433,7 @@ def on_click(x, y):
     elif 200 < x < 280 and 200 < y < 240:
         clear_screen()
         Cashout()
+        lb.Leaderboard()
 
     #Hit
     elif -85 < x < -5 and -200 < y < -160:
