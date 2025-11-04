@@ -48,8 +48,7 @@ card_turtle.speed(0)
 SuitsList = ["Hearts", "Diamonds", "Spades", "Clubs"]
 NumList = [1,2,3,4,5,6,7,8,9,10,11,12,13]
 
-CardX = [20,100,160,240,-220,-140,20,100,160,240,-220,-140,0]
-CardY = [160,60,160,60,160,60,160,60,160,60,160,60,0,0]
+CardX = [20,160,-220,20,160,-220,20,160,-220,0]
 OutlineX = [0,140,-240,0,140,-240,0,0]
 
 PlayerOptions = ["Hit", "Stand", "bet"]
@@ -222,7 +221,7 @@ def Blackjack():
         PlayerScore -= 10
     print(f"{player_name} score is {PlayerScore}")
     #Redraw display with new score
-    update_display()
+    '''update_display()'''
     #Lose condition
     if PlayerScore > 21:
         Chips -= int(bet)
@@ -251,22 +250,25 @@ def StartingCards():
         CardSuit = rand.choice(SuitsList)
         FaceCardValue()
         PlayerScore += CardValue
-        DrawCards()
+        x = CardX[0]
+        DrawCards(x, 160, CardName, CardSuit)
+        CardX.pop(0)
 
-    # Deal one card to dealer (face up)
+    # Deal one card to dealer
     CardValue = rand.choice(NumList)
     CardSuit = rand.choice(SuitsList)
     FaceCardValue()
     TempDealerValue = CardValue
     DealerScore += TempDealerValue
-    DrawCards()
+    x = CardX[0]
+    DrawCards(x, 160, CardName, CardSuit)
+    CardX.pop(0)
 
     # Update visible info (but NOT the dealer’s hidden logic)
-    update_display()
+    '''update_display()'''
     MainGameCreate()
 
 def Dealer():
-    clear_screen()
     global CardValue
     global TempDealerValue
     global DealerScore
@@ -290,9 +292,12 @@ def Dealer():
     if DealerScore > PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
         Chips = Chips - int(bet)
     print("Dealer score is", DealerScore)
+    clear_screen()
+    ReplayGame()
 
 #Clearing everything on the screen
 def clear_screen():
+    t.speed(0)
     t.clear()
     pen.clear()
     hearts.clear()
@@ -314,41 +319,40 @@ def clear_screen():
     wn.update()
 
 #Drawing a new card
-def DrawCards():
-    global x, y, OutX
-    x = CardX[0]
-    y = CardY[0]
-    OutX = OutlineX[0]
-
-    card_turtle.goto(OutX, 190)
-    CardOutline()  # Use t or card_turtle consistently
-
-    # Write the number on the card
-    card_turtle.goto(x+75, y)
-    card_turtle.write(CardName, font=("Arial", 20, "bold"))
-    card_turtle.goto(x, y-100)
-    card_turtle.write(CardName, font=("Arial", 20, "bold"))
-
-    # Stamp the suit
-    suit_turtle = {'Hearts': hearts, 'Diamonds': diamonds, 'Spades': spades, 'Clubs': clubs}[CardSuit]
+def DrawCards(x, y, card_name, card_suit):
+    y = 160
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    
+    # Draw outline
+    for i in range(2):
+        t.forward(125)
+        t.right(90)
+        t.forward(150)
+        t.right(90)
+    t.penup()
+    
+    # Write card name/number
+    t.goto(x + 80, 135)
+    t.write(card_name, font=("Arial", 20, "bold"))
+    t.goto(x + 30, 10)
+    t.write(card_name, font=("Arial", 20, "bold"))
+    
+    # Stamp suit
+    suit_turtle = {'Hearts': hearts, 'Diamonds': diamonds, 'Spades': spades, 'Clubs': clubs}[card_suit]
     suit_turtle.hideturtle()
     suit_turtle.penup()
-    for i in range(2):
-        suit_turtle.goto(x, y)
-        suit_turtle.stamp()
-        CardX.pop(0)
-        CardY.pop(0)
-        if CardX:  # Avoid index error
-            x = CardX[0]
-            y = CardY[0]
+    suit_turtle.goto(x + 30, 135)
+    suit_turtle.stamp()
+    suit_turtle.goto(x + 80, 30)
+    suit_turtle.stamp()
 
 #Setting things up to replay
 def ReplayGame():
     global PlayerScore
     global DealerScore
 
-    pen.clear()
-    t.clear()
     pen.fillcolor("grey")
     pen.penup()
     pen.goto(-200,200)
@@ -373,16 +377,6 @@ def ReplayGame():
         pen.left(90)
     pen.end_fill()
     pen.write("Cash Out", align="center", font=("Arial", 14, "bold"))
-    pen.clear()
-    t.clear()
-    hearts.clear()
-    diamonds.clear()
-    spades.clear()
-    clubs.clear()
-    t.penup()
-    t.goto(-100,160)
-    t.clear()
-    update_display()
     PlayerScore = 0
     DealerScore = 0
 
@@ -484,13 +478,10 @@ def on_click(x, y):
     #Continue
     elif -200 < x < -120 and 200 < y < 240:
         clear_screen()
-        MainGameCreate()
         BetValue()
         CardX = [20,100,160,240,-220,-140,20,100,160,240,-220,-140,0]
-        CardY = [160,60,160,60,160,60,160,60,160,60,160,60,0,0]
         OutlineX = [0,140,-240,0,140,-240,0,0]
         x = CardX[0]
-        y = CardY[0]
         OutX = OutlineX[0]
 
     #Cashout
@@ -499,15 +490,16 @@ def on_click(x, y):
         Cashout()
 
     #Hit
-    elif -85 < x < -5 and -200 < y < -160:
-        Blackjack()
-        DrawCards()
+    elif -85 < x < -5 and -200 < y < -160:  # Hit
+        Blackjack()  # Update PlayerScore, CardName, CardSuit
+        DrawCards(x, y, CardName, CardSuit)
+        '''update_display()'''
 
     #Stand
     elif 5 < x < 85 and -200 < y < -160:
         #Player stands then dealer reveals cards
         Dealer()
-        update_display()
+        '''update_display()'''
 
 #Listen for clicks
 screen.onclick(on_click)
@@ -519,7 +511,7 @@ def BetValue():
     bet = trtl.textinput("Bet", "How much do you want to bet")
     if bet.isnumeric():
         if int(bet) <= Chips:
-            pen.clear()
+            clear_screen()
             StartingCards()
         else:
             bet = trtl.textinput("Bet", "Please enter only valid numbers")
