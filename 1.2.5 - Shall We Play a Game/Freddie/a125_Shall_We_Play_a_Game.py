@@ -59,14 +59,14 @@ CardX = [20,160,-220,20,160,-220,20,160,-220,0]
 OutlineX = [0,140,-240,0,140,-240,0,0]
 
 #Variables
+max_chars = 8
+Chips = 100
 CardValue = 0
 CardName = ""
 TempPlayerValue = 0
 TempDealerValue = 0
 PlayerScore = 0
 DealerScore = 0
-Chips = 100
-max_chars = 8
 
 #Functions
 #Checking for clicks
@@ -77,7 +77,7 @@ def OnClick(x, y):
         score_turtle.clear()
         CardValue = rand.choice(NumList)
         CardSuit = rand.choice(SuitsList)
-        FaceCardValue()
+        CardsValue()
         TempPlayerValue = CardValue
         PlayerScore += TempDealerValue
         score_turtle.penup()
@@ -114,7 +114,6 @@ def OnClick(x, y):
     elif 200 < x < 280 and 200 < y < 240:
         ClearScreen()
         Cashout()
-
 
 #Asking for how much the player wants to bet
 def BetValue():
@@ -158,7 +157,7 @@ def StartingCards():
     for i in range(2):
         CardValue = rand.choice(NumList)
         CardSuit = rand.choice(SuitsList)
-        FaceCardValue()
+        CardsValue()
         PlayerScore += CardValue
         x = CardX[0]
         DrawCards(x, 160, CardName, CardSuit)
@@ -167,7 +166,7 @@ def StartingCards():
     # Deal one card to dealer
     CardValue = rand.choice(NumList)
     CardSuit = rand.choice(SuitsList)
-    FaceCardValue()
+    CardsValue()
     TempDealerValue = CardValue
     DealerScore += TempDealerValue
     x = CardX[0]
@@ -177,7 +176,8 @@ def StartingCards():
     # Update visible info (but NOT the dealer’s hidden logic)
     MainGameCreate()
 
-def FaceCardValue():
+#Checks the value of
+def CardsValue():
     global CardValue, CardSuit, CardName
     if CardValue == 13:
         CardValue = 10
@@ -280,7 +280,7 @@ def Dealer():
     while DealerScore < 17:
         CardValue = rand.choice(NumList)
         CardSuit = rand.choice(SuitsList)
-        FaceCardValue()
+        CardsValue()
         TempDealerValue = CardValue
         DealerScore = DealerScore + TempDealerValue
         pen.clear()
