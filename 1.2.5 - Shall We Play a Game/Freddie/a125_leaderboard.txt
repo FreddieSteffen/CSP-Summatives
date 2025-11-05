@@ -1,5 +1,0 @@
-Freddie,1000000
-Gold,5000
-Silver,1000
-Bronze,500
-Worst,0

@@ -55,7 +55,7 @@ t.speed(0)
 #Lists
 SuitsList = ["Hearts", "Diamonds", "Spades", "Clubs"]
 NumList = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-CardX = [20,160,-220,20,160,-220,20,160,-220,0]
+CardX = [20,160,-220,0]
 OutlineX = [0,140,-240,0,140,-240,0,0]
 
 #Variables
@@ -71,7 +71,7 @@ DealerScore = 0
 #Functions
 #Checking for clicks
 def OnClick(x, y):
-    global CardValue, TempPlayerValue, PlayerScore, CardSuit, CardName, Chips, TempDealerValue, OutX
+    global CardValue, TempPlayerValue, PlayerScore, DealerScore, CardSuit, CardName, Chips, TempDealerValue, OutX
     #Hit
     if -85 < x < -5 and -200 < y < -160:
         score_turtle.clear()
@@ -86,12 +86,12 @@ def OnClick(x, y):
         score_turtle.goto(160,-120)
         score_turtle.write(str(CardName) + " of " + str(CardSuit), font=("Arial", 14, "bold"))
         if (PlayerScore > 21):
-            Dealer()
+            PlayerScore = 0
             t.penup()
             t.goto(-20,0)
             t.write("Busted! You lost!", align="center", font=("Arial", 20, "bold"))
             t.goto(-50,-50)
-            t.write(f"You Have {Chips} Chips.", font=("Arial", 14, "bold"))
+            t.write(f"You Have {Chips - int(bet)} Chips.", font=("Arial", 14, "bold"))
 
     #Stand
     elif 5 < x < 85 and -200 < y < -160:
@@ -99,7 +99,18 @@ def OnClick(x, y):
         Dealer()
         t.penup()
         t.goto(0,-50)
-        t.write(f"You Have {Chips} Chips.", font=("Arial", 14, "bold"))
+        if PlayerScore > 21:
+            PlayerScore = 0
+        if DealerScore > 21:
+            DealerScore = 0
+        if DealerScore < PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
+            t.write(f"You Have {Chips + int(bet)} Chips.", font=("Arial", 14, "bold"))
+            Chips = Chips + int(bet)
+        if DealerScore == PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
+            t.write(f"You Have {Chips} Chips.", font=("Arial", 14, "bold"))
+        if DealerScore > PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
+            t.write(f"You Have {Chips - int(bet)} Chips.", font=("Arial", 14, "bold"))
+            Chips = Chips - int(bet)
 
     #Continue
     elif -200 < x < -120 and 200 < y < 240:
@@ -286,13 +297,9 @@ def Dealer():
         pen.clear()
         t.clear()
         score_turtle.clear()
+    if DealerScore >21:
+        DealerScore = 0
 
-    if DealerScore < PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
-        Chips = Chips + int(bet)
-    if DealerScore == PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
-        Chips = Chips
-    if DealerScore > PlayerScore and DealerScore <= 21 and PlayerScore <= 21:
-        Chips = Chips - int(bet)
     print("Dealer score is", DealerScore)
     ClearScreen()
     ReplayGame()
@@ -308,7 +315,8 @@ def Cashout():
 
 #Setting things up to replay
 def ReplayGame():
-    global PlayerScore, DealerScore
+    global PlayerScore, DealerScore, CardX
+    CardX = [20,160,-220,0]
     pen.fillcolor("grey")
     pen.penup()
     pen.goto(-200,200)
@@ -337,6 +345,8 @@ def ReplayGame():
     pen.penup()
     pen.goto(235,210)
     pen.write("Cash Out", align="center", font=("Arial", 14, "bold"))
+    t.goto(0,0)
+    t.write(f"You have {PlayerScore}, Dealer has {DealerScore}.", font=("Arial", 14, "bold"))
     PlayerScore = 0
     DealerScore = 0
 
