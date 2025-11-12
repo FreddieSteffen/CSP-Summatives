@@ -47,51 +47,135 @@ YellowChip.shapesize(3.5)
 
 #Ask for player1/player2 name
 #Ask for what difficulty for both players
-playerName1 = trtl.textinput("Name", "What is player 1s name?")
-while "," in playerName1 or len(playerName1) == 0 or "1" in playerName1 or "2" in playerName1 or "3" in playerName1 or "4" in playerName1 or "5" in playerName1 or "6" in playerName1 or "7" in playerName1 or "8" in playerName1 or "9" in playerName1:
-  playerName1 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
-  break
+def playernames():
+  playerName1 = trtl.textinput("Name", "What is player 1s name?")
+  while "," in playerName1 or len(playerName1) == 0 or "1" in playerName1 or "2" in playerName1 or "3" in playerName1 or "4" in playerName1 or "5" in playerName1 or "6" in playerName1 or "7" in playerName1 or "8" in playerName1 or "9" in playerName1:
+    playerName1 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
+    break
 
-playerName2 = trtl.textinput("Name", "What is player 2s name?")
-while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
-  playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
-  break
-
+  playerName2 = trtl.textinput("Name", "What is player 2s name?")
+  while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
+    playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
+    break
+playernames()
 def PlayerDifficulty():
   playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
   if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
-    print("Player difficulty is easy")
+    PlayerQuestionEasy()
   elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
-    print("Player diff is med")
+    PlayerQuestionMed()
   elif playerDif == "Hard" or playerDif == "HARD" or playerDif == "hard":
-    print("Player difficulty is hard")
+    PlayerQuestionHard()
   else:
-    playerDif
-PlayerDifficulty()
+    PlayerDifficulty()
 
 #Player Turn
+playermove = 1
+turn = trtl.Turtle()
+turn.color("red")
+turn.shape('circle')
+turn.shapesize(3.5)
+def playerturn():
+  global playermove
+  if playermove % 2 == 0:
+    turn.color("red")
+  else:
+    turn.color("yellow")
+  turn.penup()
+  turn.goto(400,0)
+  playermove = playermove + 1
+
 
 #Question correct If then
 randindex = rand.randint(1,9)
 index = randindex
 def PlayerQuestionEasy():
+  global index
+  num1 = rand.randint(1,100)
+  num2 = rand.randint(1,50)
   if index % 2 == 0:
-    Player1QuestionEven = trtl.textinput("Question", "What is "+str(num1)+" + "+str(num2)+" equal to? ")
-    if Player1QuestionEven == (str(num1 + num2)):
+    PlayerQuestionEven = trtl.textinput("Easy", "What is "+str(num1)+" + "+str(num2)+" equal to?")
+    if PlayerQuestionEven == (str(num1 + num2)):
       print("Good job you got it right!")
     else:
       print("Sorry that's incorect")
   else:
-    Player1QuestionOdd = trtl.textinput("Question", "What is "+str(num1)+" - "+str(num2)+" equal to? ")
-    if Player1QuestionOdd == (str(num1 - num2)):
+    PlayerQuestionOdd = trtl.textinput("Question", "What is "+str(num1)+" - "+str(num2)+" equal to?")
+    if PlayerQuestionOdd == (str(num1 - num2)):
       print("Good job you got it right!")
     else:
       print("Sorry that's incorect")
   randindex = rand.randint(1,9)
   index = index + randindex
-PlayerQuestionEasy()
 
+def PlayerQuestionMed():
+  num1 = rand.randrange(1,10)
+  num2 = rand.randint(1,10)
+  global index
+  if index % 2 == 0:
+    PlayerQuestionEven = trtl.textinput("Medium", "What is " + str(num1) + " x " + str(num2) + " equal to?")
+    if PlayerQuestionEven == (str(num1*num2)):
+      print("Thats correct")
+      print(PlayerQuestionEven)
+    else:
+      print("Thats incorect")
+      print(str(num1*num2))
+      print(PlayerQuestionEven)
+  else:
+    if num1 % num2 == 0:
+      PlayerQuestionOdd = trtl.textinput("Medium", "What is " + str(num1) + " / " + str(num2) + " equal to?")
+      if (num1 / num2) % 1 == 0:
+        PlayerQuestionOdd = PlayerQuestionOdd + ".0"
+      if PlayerQuestionOdd == (str(num1/num2)):
+        print("thats correct")
+        print(PlayerQuestionOdd)
+      else:
+        print("thats incorrect")
+        print(str(num1/num2))
+        print(PlayerQuestionOdd)
+    else:
+      num2 = 2
+      PlayerQuestionOdd = trtl.textinput("Medium", "What is " + str(num1) + " / " + str(num2) + " equal to?")
+      if (num1 / num2) % 1 == 0:
+        PlayerQuestionOdd = PlayerQuestionOdd + ".0"
+        print(PlayerQuestionOdd)
+      if PlayerQuestionOdd == (str(num1/num2)):
+        print("thats correct")
+        print(PlayerQuestionOdd)
+      else:
+        print("thats incorrect")
+        print(str(num1/num2))
+        print(PlayerQuestionOdd)
+  randindex = rand.randint(1,9)
+  index = index + randindex
   
+def PlayerQuestionHard():
+  num1 = rand.randint(1,5)
+  num2 = rand.randint(1,5)
+  num3 = rand.randint(1,5)
+  global index
+  if index % 2 == 0:
+    PlayerQuestionEven = trtl.textinput("Hard", "Solve for x (rounded to nearest whole number): " + str(num1) + "x + " + str(num2) + " = " + str(num3))
+    PlayerQuestionEven = int(PlayerQuestionEven)
+    PlayerQuestionEven = round(PlayerQuestionEven)
+    print(PlayerQuestionEven)
+    if PlayerQuestionEven == round((num3 - num2)/num1):
+      print("Thats correct")
+    else:
+      print("That's Incorrect")
+      print(str((num3-num2)/num1))
+  else:
+    PlayerQuestionOdd = trtl.textinput("Hard", "Solve for x (rounded to nearest whole number):" + str(num1) + "x - " + str(num2) + " = " + str(num3))
+    PlayerQuestionOdd = int(PlayerQuestionOdd)
+    PlayerQuestionOdd = round(PlayerQuestionOdd)
+    print(PlayerQuestionOdd)
+    if PlayerQuestionOdd == round((num3 + num2)/num1):
+      print("Thats correct")
+    else:
+      print("That's Incorrect")
+      print(str((num3+num2)/num1))
+  randindex = rand.randint(1,9)
+  index = index + randindex  
 
 #----Grey Chip Hover
 
@@ -102,10 +186,12 @@ PlayerQuestionEasy()
 #Print Winner
 
 #Ask for replay
-
+def playagain():
+  playernames()
+  PlayerDifficulty()
 
 #Play Game
-
+playagain()
 
 #Keeping whats on the screen there
 wn = trtl.Screen()
