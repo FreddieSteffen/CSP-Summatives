@@ -49,12 +49,14 @@ WelcomeTurtle.goto(-150,300)
 WelcomeTurtle.write("Welcome to Connect 4", font=("Arial", 30, "bold"))
 #Make chips turtles
 RedChip = trtl.Turtle()
+RedChip.speed(0)
 RedChip.color("red")
 RedChip.shape('circle')
 RedChip.shapesize(3.5)
 RedChip.penup()
 RedChip.goto(400, 100)
 YellowChip = trtl.Turtle()
+YellowChip.speed(0)
 YellowChip.color("yellow")
 YellowChip.shape('circle')
 YellowChip.shapesize(3.5)
@@ -63,17 +65,20 @@ YellowChip.goto(400, 200)
 #Player Turn
 playermove = 1
 turn = trtl.Turtle()
+turn.speed(0)
 turn.color("yellow")
 turn.shape('circle')
 turn.shapesize(3.5)
 #Grey Chip
 GreyChip = trtl.Turtle()
+GreyChip.speed(0)
 GreyChip.hideturtle()
 GreyChip.color("grey")
 GreyChip.shape('circle')
 GreyChip.shapesize(3.5)
 #New game
 pen = trtl.Turtle()
+pen.speed(0)
 pen.hideturtle()
 pen.speed(0)
 pen.fillcolor("grey")
@@ -91,20 +96,31 @@ pen.penup()
 pen.goto(410,-80)
 pen.write("New Game", align="center", font=("Arial", 14, "bold"))
 playernameTurtle = trtl.Turtle()
+playernameTurtle.speed(0)
 playernameTurtle.penup()
 playernameTurtle.hideturtle()
+RedChip.speed(3)
+YellowChip.speed(3)
 
 #Functions
 
 #Players Turn
 def playerturn():
   global playermove
+  playernameTurtle.clear()
   if playermove % 2 == 0:
     turn.color("red")
+    playernameTurtle.goto(410,-150)
+    playerName = playerNameList[0]
+    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
   else:
     turn.color("yellow")
+    playernameTurtle.goto(410,-150)
+    playerName = playerNameList[1]
+    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
   turn.penup()
   turn.goto(400,0)
+
 #Question Diffucultys
 def PlayerQuestionEasy():
   global index
@@ -254,6 +270,13 @@ def OnClick(x, y):
     YellowChip.clear()
     YellowChip.penup()
     YellowChip.goto(400, 200)
+    ChipBelow1 = -280
+    ChipBelow2 = -280
+    ChipBelow3 = -280
+    ChipBelow4 = -280
+    ChipBelow5 = -280
+    ChipBelow6 = -280
+    ChipBelow7 = -280
     GameLogic()
 def countdown(seconds):
     while seconds > 0:
@@ -303,6 +326,7 @@ def ChipsDrop(x, y):
         playermove = playermove + 1
         playerturn()
         countdown(1.5)
+
         GameLogic()
 
     else:
@@ -377,14 +401,7 @@ if play_game == "yes" or play_game == "YES" or play_game == "Yes" or play_game =
   while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
     playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
     break
-  if playermove % 2 == 0:
-    playernameTurtle.goto(410,-150)
-    playerName = playerNameList[0]
-    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
-  else:
-    playernameTurtle.goto(410,-150)
-    playerName = playerNameList[1]
-    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
+  playerturn()
   GameLogic()
 else: 
   WelcomeTurtle.clear()
