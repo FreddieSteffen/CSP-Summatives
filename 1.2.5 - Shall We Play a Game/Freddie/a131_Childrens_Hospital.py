@@ -1,6 +1,7 @@
 #Game setup
 import turtle as trtl
 import random as rand
+import time as time
 wn = trtl.Screen()
 
 #Variables
@@ -42,11 +43,14 @@ RedChip = trtl.Turtle()
 RedChip.color("red")
 RedChip.shape('circle')
 RedChip.shapesize(3.5)
-RedChip.back(10)
+RedChip.penup()
+RedChip.goto(400, 100)
 YellowChip = trtl.Turtle()
 YellowChip.color("yellow")
 YellowChip.shape('circle')
 YellowChip.shapesize(3.5)
+YellowChip.penup()
+YellowChip.goto(400, 200)
 
 #Ask for player1/player2 name
 #Ask for what difficulty for both players
@@ -60,23 +64,13 @@ while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" i
   playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
   break
 
-def PlayerDifficulty():
-  playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
-  if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
-    PlayerQuestionEasy()
-  elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
-    PlayerQuestionMed()
-  elif playerDif == "Hard" or playerDif == "HARD" or playerDif == "hard":
-    PlayerQuestionHard()
-  else:
-    PlayerDifficulty()
-
 #Player Turn
 playermove = 1
 turn = trtl.Turtle()
-turn.color("red")
+turn.color("yellow")
 turn.shape('circle')
 turn.shapesize(3.5)
+
 def playerturn():
   global playermove
   if playermove % 2 == 0:
@@ -85,8 +79,6 @@ def playerturn():
     turn.color("yellow")
   turn.penup()
   turn.goto(400,0)
-  playermove = playermove + 1
-
 
 #Question correct If then
 randindex = rand.randint(1,9)
@@ -189,94 +181,211 @@ y = ychip
 
 x = 0
 
+InARow = False
 #----Grey Chip Hover
 def OnClick(x, y):
+  global CurrentX, CurrentY, ChipBelow1, ChipBelow2, ChipBelow3, ChipBelow4, ChipBelow5, ChipBelow6, ChipBelow7
   #640x480
   #Column 1
   if -320 < x < -230 and -240 < y < 240:
     GreyChip.penup()
     x = -270
-    GreyChip.goto(x, ychip)
-    #FINISH TOMMOROW
-    for i in range():
-      Board[0][0] = 1
+    GreyChip.goto(x, ChipBelow1+80)
   #Column 2
   elif -230 < x < -140 and -240 < y < 240: 
     GreyChip.penup()
     x = -180
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow2+80)
   #Column 3
   elif -140 < x < -50 and -240 < y < 240:
     GreyChip.penup()
     x = -90
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow3+80)
   #Column 4
   elif -50 < x <40 and -240 < y < 240:
     GreyChip.penup()
     x = 0
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow4+80)
   #Column 5
   elif 40 < x < 130 and -240 < y < 240:
     GreyChip.penup()
     x = 90
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow5+80)
   #Column 6
   elif 130 < x < 220 and -240 < y < 240:
     GreyChip.penup()
     x = 180
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow6+80)
   #Column 7
   elif 220 < x < 320 and -240 < y < 240:
     GreyChip.penup()
     x = 270
-    GreyChip.goto(x, ychip)
+    GreyChip.goto(x, ChipBelow7+80)
+  #New Game
+  elif 365 < x < 445 and -100 < y < -60:
+    RedChip.clear()
+    YellowChip.clear()
+    RedChip.hideturtle()
+    YellowChip.hideturtle()
+    GameLogic()
 
 ChipBelow = False
 
+
+def countdown(seconds):
+    while seconds > 0:
+        time.sleep(1)
+        seconds -= 1
+ChipBelow1 = -280
+ChipBelow2 = -280
+ChipBelow3 = -280
+ChipBelow4 = -280
+ChipBelow5 = -280
+ChipBelow6 = -280
+ChipBelow7 = -280
 #Chips drop
-CurrentX = GreyChip.xcor()
-CurrentY = 270
 def ChipsDrop(x, y):
-  global CurrentX, CurrentY
-  if -240 < x < 240 and ChipBelow == False:
+  global CurrentX, CurrentY, playermove, ChipBelow1, ChipBelow2, ChipBelow3, ChipBelow4, ChipBelow5, ChipBelow6, ChipBelow7
+  CurrentX = GreyChip.xcor()
+  CurrentY = 270
+  if -320 < x < 320:
     if playermove % 2 == 0:
       RedChip.penup()
       RedChip.goto(CurrentX,CurrentY)
       RedChip.setheading(90)
-      while GreyChip.ycor() >= -240:
+      while RedChip.ycor() > ChipBelow:
         RedChip.back(80)
-      print(CurrentY)
+      else: 
+        if -320 < x < -230 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow1+80)
+          ChipBelow1 = ChipBelow1 + 80
+        #Column 2
+        elif -230 < x < -140 and -240 < y < 240: 
+          RedChip.goto(CurrentX,ChipBelow2+80)
+          ChipBelow2 = ChipBelow2 + 80
+        #Column 3
+        elif -140 < x < -50 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow3+80)
+          ChipBelow3 = ChipBelow3 + 80
+        #Column 4
+        elif -50 < x <40 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow4+80)
+          ChipBelow4 = ChipBelow4 + 80
+        #Column 5
+        elif 40 < x < 130 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow5+80)
+          ChipBelow5 = ChipBelow5 + 80
+        #Column 6
+        elif 130 < x < 220 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow6+80)
+          ChipBelow6 = ChipBelow6 + 80
+        #Column 7
+        elif 220 < x < 320 and -240 < y < 240:
+          RedChip.goto(CurrentX,ChipBelow7+80)
+          ChipBelow7 = ChipBelow7 + 80
+        RedChip.stamp()
+        playermove = playermove + 1
+        playerturn()
+        countdown(1.5)
+        GameLogic()
 
     else:
       YellowChip.penup()
       YellowChip.goto(CurrentX,CurrentY)
       YellowChip.setheading(90)
-      while GreyChip.ycor() >= -240:
+      while YellowChip.ycor() > ChipBelow:
         YellowChip.back(80)
-      print(CurrentY)
+      else: 
+        if -320 < x < -230 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow1+80)
+          ChipBelow1 = ChipBelow1 + 80
+          print(ChipBelow1)
+        #Column 2
+        elif -230 < x < -140 and -240 < y < 240: 
+          YellowChip.goto(CurrentX,ChipBelow2+80)
+          ChipBelow2 = ChipBelow2 + 80
+          print(ChipBelow2)
+        #Column 3
+        elif -140 < x < -50 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow3+80)
+          ChipBelow3 = ChipBelow3 + 80
+          print(ChipBelow3)
+        #Column 4
+        elif -50 < x <40 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow4+80)
+          ChipBelow4 = ChipBelow4 + 80
+          print(ChipBelow4)
+        #Column 5
+        elif 40 < x < 130 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow5+80)
+          ChipBelow5 = ChipBelow5 + 80
+          print(ChipBelow5)
+        #Column 6
+        elif 130 < x < 220 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow6+80)
+          ChipBelow6 = ChipBelow6 + 80
+          print(ChipBelow6)
+        #Column 7
+        elif 220 < x < 320 and -240 < y < 240:
+          YellowChip.goto(CurrentX,ChipBelow7+80)
+          ChipBelow7 = ChipBelow7 + 80
+          print(ChipBelow7)
 
+        YellowChip.stamp()
+        playermove = playermove + 1
+        playerturn()
+        countdown(1.5)
+        GameLogic()
 
 #Game logic for if someone wins
 def GameLogic():
-  print()
-  #if (row1,column1) :
+  global playerDif, difficulty
+  playerturn()
+  difficulty = 1
+  if difficulty == 1:
+    playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
+    difficulty = 0
+  PlayerDifficulty()
+  screen.onclick(OnClick)
+  GreyChip.onclick(ChipsDrop)
 
-
-#Print Winner
-
+#New game
+pen = trtl.Turtle()
+pen.hideturtle()
+pen.speed(0)
+pen.fillcolor("grey")
+pen.penup()
+pen.goto(365,-100)
+pen.pendown()
+pen.begin_fill()
+for i in range(2):
+  pen.forward(80)
+  pen.left(90)
+  pen.forward(40)
+  pen.left(90)
+pen.end_fill()
+pen.penup()
+pen.goto(410,-80)
+pen.write("New Game", align="center", font=("Arial", 14, "bold"))
 
 #Ask for replay
 def playagain():
   replayGame = trtl.textinput("Replay?", "Do you want to play the game again? Yes or No")
   if replayGame == "yes" or play_game == "YES" or play_game == "Yes" or play_game == "y" or play_game =="Y":
     print("Working")
-    PlayerDifficulty()
   else: 
-    print("Restart if you want to play")  
+    print("Restart if you want to play")
+
+def PlayerDifficulty():
+  if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
+    PlayerQuestionEasy()
+  elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
+    PlayerQuestionMed()
+  elif playerDif == "Hard" or playerDif == "HARD" or playerDif == "hard":
+    PlayerQuestionHard()
 
 #Play Game
-screen.onclick(OnClick)
-GreyChip.onclick(ChipsDrop)
+GameLogic()
 
 #Keeping whats on the screen there
 wn = trtl.Screen()
