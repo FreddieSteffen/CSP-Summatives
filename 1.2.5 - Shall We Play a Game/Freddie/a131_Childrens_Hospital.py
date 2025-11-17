@@ -8,26 +8,30 @@ wn = trtl.Screen()
 game_board = "Connect4Board.gif"
 num1 = 0
 num2 = 0
+randindex = rand.randint(1,9)
+index = randindex
+ychip = 0
+y = ychip
+x = 0
+InARow = False
+ChipBelow = False
+ChipBelow1 = -280
+ChipBelow2 = -280
+ChipBelow3 = -280
+ChipBelow4 = -280
+ChipBelow5 = -280
+ChipBelow6 = -280
+ChipBelow7 = -280
+difficulty = 1
 
 #Lists
 Board = [(0,0,0,0,0,0,0),(0,0,0,0,0,0,0),(0,0,0,0,0,0,0),(0,0,0,0,0,0,0),(0,0,0,0,0,0,0),(0,0,0,0,0,0,0)]
 Rows = [0,1,2,3,4,5]
 Columns = [0,1,2,3,4,5,6]
-
 row1 = Rows[0]
 column1 = Columns[0]
-#Functions
 
-
-#Wecome to game
-
-#Ask if they want to play
-play_game = trtl.textinput("Play game?", "Do you want to play the game? Yes or No")
-if play_game == "yes" or play_game == "YES" or play_game == "Yes" or play_game == "y" or play_game =="Y":
-  print("Working")
-else: 
-  print("Restart if you want to play")
-
+#Turtles
 #Game board settup
 #Game board
 wn.setup(width=1.0,height=1.0)
@@ -35,9 +39,12 @@ wn.addshape(game_board)
 game_board_turtle = trtl.Turtle()
 game_board_turtle.shape(game_board)
 screen = trtl.Screen()
-
-#Buttons
-
+#Welcome turtle
+WelcomeTurtle = trtl.Turtle()
+WelcomeTurtle.hideturtle()
+WelcomeTurtle.penup()
+WelcomeTurtle.goto(-150,300)
+WelcomeTurtle.write("Welcome to Connect 4", font=("Arial", 30, "bold"))
 #Make chips turtles
 RedChip = trtl.Turtle()
 RedChip.color("red")
@@ -51,26 +58,40 @@ YellowChip.shape('circle')
 YellowChip.shapesize(3.5)
 YellowChip.penup()
 YellowChip.goto(400, 200)
-
-#Ask for player1/player2 name
-#Ask for what difficulty for both players
-playerName1 = trtl.textinput("Name", "What is player 1s name?")
-while "," in playerName1 or len(playerName1) == 0 or "1" in playerName1 or "2" in playerName1 or "3" in playerName1 or "4" in playerName1 or "5" in playerName1 or "6" in playerName1 or "7" in playerName1 or "8" in playerName1 or "9" in playerName1:
-  playerName1 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
-  break
-
-playerName2 = trtl.textinput("Name", "What is player 2s name?")
-while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
-  playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
-  break
-
 #Player Turn
 playermove = 1
 turn = trtl.Turtle()
 turn.color("yellow")
 turn.shape('circle')
 turn.shapesize(3.5)
+#Grey Chip
+GreyChip = trtl.Turtle()
+GreyChip.hideturtle()
+GreyChip.color("grey")
+GreyChip.shape('circle')
+GreyChip.shapesize(3.5)
+#New game
+pen = trtl.Turtle()
+pen.hideturtle()
+pen.speed(0)
+pen.fillcolor("grey")
+pen.penup()
+pen.goto(365,-100)
+pen.pendown()
+pen.begin_fill()
+for i in range(2):
+  pen.forward(80)
+  pen.left(90)
+  pen.forward(40)
+  pen.left(90)
+pen.end_fill()
+pen.penup()
+pen.goto(410,-80)
+pen.write("New Game", align="center", font=("Arial", 14, "bold"))
 
+#Functions
+
+#Players Turn
 def playerturn():
   global playermove
   if playermove % 2 == 0:
@@ -79,10 +100,7 @@ def playerturn():
     turn.color("yellow")
   turn.penup()
   turn.goto(400,0)
-
-#Question correct If then
-randindex = rand.randint(1,9)
-index = randindex
+#Question Diffucultys
 def PlayerQuestionEasy():
   global index
   num1 = rand.randint(1,100)
@@ -101,7 +119,6 @@ def PlayerQuestionEasy():
       print("Sorry that's incorect")
   randindex = rand.randint(1,9)
   index = index + randindex
-
 def PlayerQuestionMed():
   num1 = rand.randrange(1,10)
   num2 = rand.randint(1,10)
@@ -141,8 +158,7 @@ def PlayerQuestionMed():
         print(str(num1/num2))
         print(PlayerQuestionOdd)
   randindex = rand.randint(1,9)
-  index = index + randindex
-  
+  index = index + randindex  
 def PlayerQuestionHard():
   num1 = rand.randint(1,5)
   num2 = rand.randint(1,5)
@@ -170,19 +186,16 @@ def PlayerQuestionHard():
       print(str((num3+num2)/num1))
   randindex = rand.randint(1,9)
   index = index + randindex  
-
-GreyChip = trtl.Turtle()
-GreyChip.color("grey")
-GreyChip.shape('circle')
-GreyChip.shapesize(3.5)
-
-ychip = 0
-y = ychip
-
-x = 0
-
-InARow = False
-#----Grey Chip Hover
+def PlayerDifficulty():
+  playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
+  if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
+    PlayerQuestionEasy()
+  elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
+    PlayerQuestionMed()
+  elif playerDif == "Hard" or playerDif == "HARD" or playerDif == "hard":
+    PlayerQuestionHard()
+  GreyChip.showturtle()
+#Grey Chip Hover
 def OnClick(x, y):
   global CurrentX, CurrentY, ChipBelow1, ChipBelow2, ChipBelow3, ChipBelow4, ChipBelow5, ChipBelow6, ChipBelow7
   #640x480
@@ -224,25 +237,16 @@ def OnClick(x, y):
   #New Game
   elif 365 < x < 445 and -100 < y < -60:
     RedChip.clear()
+    RedChip.penup()
+    RedChip.goto(400, 100)
     YellowChip.clear()
-    RedChip.hideturtle()
-    YellowChip.hideturtle()
+    YellowChip.penup()
+    YellowChip.goto(400, 200)
     GameLogic()
-
-ChipBelow = False
-
-
 def countdown(seconds):
     while seconds > 0:
         time.sleep(1)
         seconds -= 1
-ChipBelow1 = -280
-ChipBelow2 = -280
-ChipBelow3 = -280
-ChipBelow4 = -280
-ChipBelow5 = -280
-ChipBelow6 = -280
-ChipBelow7 = -280
 #Chips drop
 def ChipsDrop(x, y):
   global CurrentX, CurrentY, playermove, ChipBelow1, ChipBelow2, ChipBelow3, ChipBelow4, ChipBelow5, ChipBelow6, ChipBelow7
@@ -336,56 +340,39 @@ def ChipsDrop(x, y):
         playerturn()
         countdown(1.5)
         GameLogic()
-
 #Game logic for if someone wins
 def GameLogic():
-  global playerDif, difficulty
+  global difficulty
   playerturn()
-  difficulty = 1
   if difficulty == 1:
-    playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
+    PlayerDifficulty()
     difficulty = 0
-  PlayerDifficulty()
   screen.onclick(OnClick)
   GreyChip.onclick(ChipsDrop)
 
-#New game
-pen = trtl.Turtle()
-pen.hideturtle()
-pen.speed(0)
-pen.fillcolor("grey")
-pen.penup()
-pen.goto(365,-100)
-pen.pendown()
-pen.begin_fill()
-for i in range(2):
-  pen.forward(80)
-  pen.left(90)
-  pen.forward(40)
-  pen.left(90)
-pen.end_fill()
-pen.penup()
-pen.goto(410,-80)
-pen.write("New Game", align="center", font=("Arial", 14, "bold"))
-
-#Ask for replay
-def playagain():
-  replayGame = trtl.textinput("Replay?", "Do you want to play the game again? Yes or No")
-  if replayGame == "yes" or play_game == "YES" or play_game == "Yes" or play_game == "y" or play_game =="Y":
-    print("Working")
-  else: 
-    print("Restart if you want to play")
-
-def PlayerDifficulty():
-  if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
-    PlayerQuestionEasy()
-  elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
-    PlayerQuestionMed()
-  elif playerDif == "Hard" or playerDif == "HARD" or playerDif == "hard":
-    PlayerQuestionHard()
 
 #Play Game
-GameLogic()
+#Ask if they want to play
+play_game = trtl.textinput("Play game?", "Do you want to play the game? Yes or No")
+if play_game == "yes" or play_game == "YES" or play_game == "Yes" or play_game == "y" or play_game =="Y":
+  playerName1 = trtl.textinput("Name", "What is player 1s name?")
+  while "," in playerName1 or len(playerName1) == 0 or "1" in playerName1 or "2" in playerName1 or "3" in playerName1 or "4" in playerName1 or "5" in playerName1 or "6" in playerName1 or "7" in playerName1 or "8" in playerName1 or "9" in playerName1:
+    playerName1 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
+    break
+  playerName2 = trtl.textinput("Name", "What is player 2s name?")
+  while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
+    playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
+    break
+  GameLogic()
+else: 
+  WelcomeTurtle.clear()
+  GreyChip.clear()
+  RedChip.clear()
+  YellowChip.clear()
+  pen.clear()
+  turn.clear()
+  WelcomeTurtle.goto(-150,300)
+  WelcomeTurtle.write("Welcome to Connect 4", font=("Arial", 30, "bold"))
 
 #Keeping whats on the screen there
 wn = trtl.Screen()
