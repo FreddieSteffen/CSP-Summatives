@@ -30,6 +30,8 @@ Rows = [0,1,2,3,4,5]
 Columns = [0,1,2,3,4,5,6]
 row1 = Rows[0]
 column1 = Columns[0]
+playerNameList = []
+playeranswerslist = []
 
 #Turtles
 #Game board settup
@@ -88,6 +90,9 @@ pen.end_fill()
 pen.penup()
 pen.goto(410,-80)
 pen.write("New Game", align="center", font=("Arial", 14, "bold"))
+playernameTurtle = trtl.Turtle()
+playernameTurtle.penup()
+playernameTurtle.hideturtle()
 
 #Functions
 
@@ -109,12 +114,16 @@ def PlayerQuestionEasy():
     PlayerQuestionEven = trtl.textinput("Easy", "What is "+str(num1)+" + "+str(num2)+" equal to?")
     if PlayerQuestionEven == (str(num1 + num2)):
       print("Good job you got it right!")
+      playeranswerslist.append(PlayerQuestionEven)
+      print(playeranswerslist)
     else:
       print("Sorry that's incorect")
   else:
     PlayerQuestionOdd = trtl.textinput("Question", "What is "+str(num1)+" - "+str(num2)+" equal to?")
     if PlayerQuestionOdd == (str(num1 - num2)):
       print("Good job you got it right!")
+      playeranswerslist.append(PlayerQuestionOdd)
+      print(playeranswerslist)
     else:
       print("Sorry that's incorect")
   randindex = rand.randint(1,9)
@@ -127,11 +136,13 @@ def PlayerQuestionMed():
     PlayerQuestionEven = trtl.textinput("Medium", "What is " + str(num1) + " x " + str(num2) + " equal to?")
     if PlayerQuestionEven == (str(num1*num2)):
       print("Thats correct")
-      print(PlayerQuestionEven)
+      playeranswerslist.append(PlayerQuestionEven)
+      print(playeranswerslist)
     else:
       print("Thats incorect")
       print(str(num1*num2))
-      print(PlayerQuestionEven)
+      playeranswerslist.append(PlayerQuestionOdd)
+      print(playeranswerslist)
   else:
     if num1 % num2 == 0:
       PlayerQuestionOdd = trtl.textinput("Medium", "What is " + str(num1) + " / " + str(num2) + " equal to?")
@@ -168,7 +179,8 @@ def PlayerQuestionHard():
     PlayerQuestionEven = trtl.textinput("Hard", "Solve for x (rounded to nearest whole number): " + str(num1) + "x + " + str(num2) + " = " + str(num3))
     PlayerQuestionEven = int(PlayerQuestionEven)
     PlayerQuestionEven = round(PlayerQuestionEven)
-    print(PlayerQuestionEven)
+    playeranswerslist.append(PlayerQuestionEven)
+    print(playeranswerslist)
     if PlayerQuestionEven == round((num3 - num2)/num1):
       print("Thats correct")
     else:
@@ -178,7 +190,8 @@ def PlayerQuestionHard():
     PlayerQuestionOdd = trtl.textinput("Hard", "Solve for x (rounded to nearest whole number):" + str(num1) + "x - " + str(num2) + " = " + str(num3))
     PlayerQuestionOdd = int(PlayerQuestionOdd)
     PlayerQuestionOdd = round(PlayerQuestionOdd)
-    print(PlayerQuestionOdd)
+    playeranswerslist.append(PlayerQuestionOdd)
+    print(playeranswerslist)
     if PlayerQuestionOdd == round((num3 + num2)/num1):
       print("Thats correct")
     else:
@@ -187,7 +200,6 @@ def PlayerQuestionHard():
   randindex = rand.randint(1,9)
   index = index + randindex  
 def PlayerDifficulty():
-  playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
   if playerDif == "Easy" or playerDif == "EASY" or playerDif == "easy":
     PlayerQuestionEasy()
   elif playerDif == "Medium" or playerDif == "medium" or playerDif == "MEDIUM" or playerDif == "Med" or playerDif == "med" or playerDif == "MED":
@@ -342,27 +354,37 @@ def ChipsDrop(x, y):
         GameLogic()
 #Game logic for if someone wins
 def GameLogic():
-  global difficulty
+  global difficulty, playerDif
   playerturn()
-  if difficulty == 1:
-    PlayerDifficulty()
+  while difficulty == 1:
+    playerDif = trtl.textinput("Difficulty", "What do you want the difficulty to be? Easy/Med/Hard")
     difficulty = 0
+  PlayerDifficulty()
   screen.onclick(OnClick)
   GreyChip.onclick(ChipsDrop)
-
 
 #Play Game
 #Ask if they want to play
 play_game = trtl.textinput("Play game?", "Do you want to play the game? Yes or No")
 if play_game == "yes" or play_game == "YES" or play_game == "Yes" or play_game == "y" or play_game =="Y":
   playerName1 = trtl.textinput("Name", "What is player 1s name?")
+  playerNameList.append(playerName1)
   while "," in playerName1 or len(playerName1) == 0 or "1" in playerName1 or "2" in playerName1 or "3" in playerName1 or "4" in playerName1 or "5" in playerName1 or "6" in playerName1 or "7" in playerName1 or "8" in playerName1 or "9" in playerName1:
     playerName1 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
     break
   playerName2 = trtl.textinput("Name", "What is player 2s name?")
+  playerNameList.append(playerName2)
   while "," in playerName2 or len(playerName2) == 0 or "1" in playerName2 or "2" in playerName2 or "3" in playerName2 or "4" in playerName2 or "5" in playerName2 or "6" in playerName2 or "7" in playerName2 or "8" in playerName2 or "9" in playerName2:
     playerName2 = trtl.textinput("Name", "Please do not use a comma, nothing, or number Enter your name")
     break
+  if playermove % 2 == 0:
+    playernameTurtle.goto(410,-150)
+    playerName = playerNameList[0]
+    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
+  else:
+    playernameTurtle.goto(410,-150)
+    playerName = playerNameList[1]
+    playernameTurtle.write("It's " + playerName + " Turn", align="center", font=("Arial", 14, "bold"))
   GameLogic()
 else: 
   WelcomeTurtle.clear()
