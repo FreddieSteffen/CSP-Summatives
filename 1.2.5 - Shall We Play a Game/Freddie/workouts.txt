@@ -1,0 +1,8 @@
+Threshold T
+Threshold T/R
+Interval I
+Interval I/R
+Repititions R
+Hill Repeats
+Easy
+Long
