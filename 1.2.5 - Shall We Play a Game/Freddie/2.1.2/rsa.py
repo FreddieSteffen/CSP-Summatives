@@ -5,7 +5,7 @@ import sys
 import math
 
 from random import randrange
-
+xrange = 0
 def rabinMiller(n, k=10):
     if n == 2:
             return True
