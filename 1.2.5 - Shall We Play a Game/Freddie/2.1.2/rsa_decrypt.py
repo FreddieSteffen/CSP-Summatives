@@ -1,7 +1,7 @@
 #   a212_rsa_decrypt.py
 import rsa as rsa
 
-key = int(input("Enter the Decryption Key (Your private key):"))
+key = int(input("Enter the Decryption Key (Their Public):"))
 mod_value = int(input("Enter the Modulus:"))
 
 #encrypted_msg = input("What message would you like to decrypt (No brackets):")
