@@ -45,7 +45,8 @@ lbl_display.pack(padx=5)
 
 frame_login.tkraise()
 test_textbox = tksc.ScrolledText(frame_auth)
-test_textbox.configure(height=10, width=50, state='disabled')
+test_textbox.configure(height=10, width=50)
+''', state='disabled'''
 test_textbox.pack(pady=10)
 startingText = "Starting text here"
 test_textbox.insert(tk.INSERT, startingText)
