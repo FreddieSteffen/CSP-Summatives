@@ -1,4 +1,4 @@
-#p227_starter_one_button_shell.py
+#2.2.7 StanfordCommandGUI.py
 #Note this will not run in the code editor and must be downloaded
 import subprocess
 import tkinter as tk
@@ -6,11 +6,13 @@ import tkinter.scrolledtext as tksc
 from tkinter.filedialog import asksaveasfilename
 from PIL import Image, ImageTk
 
+#Runs the commands from the buttons the user clicks and the URL they type in
 def do_command(command):
   global command_textbox, url_entry
   if command == "Save":
     mSave()
 
+  #Gets rid of https://, http://, and www. from the user input
   user_input = url_entry.get().strip()
   for prefix in ("https://", "http://", "www."):
     while user_input.startswith(prefix):
@@ -29,6 +31,7 @@ def do_command(command):
   command_textbox.insert(tk.END, cmd_results)
   command_textbox.insert(tk.END, cmd_errors)
 
+  #Replaces whatevers in the teminal with the default trash text
   if command == "Trash":
     command_textbox.delete("1.0", tk.END)
     command_textbox.insert(tk.INSERT, "Terminal: This is where things you do will show up.")
@@ -42,13 +45,14 @@ def mSave():
   file.write(text_to_save)
   file.close()
     
+#Clears what I have in the url text box whenever it's clicked
 def clear_on_click(event):
   if url_entry.get() == startingTextURL:
     url_entry.delete(0, tk.END)
 
 root = tk.Tk()
 root.configure(bg="#8C1515")
-root.title("Command GUI")
+root.title("Stanford Command GUI")
 root.columnconfigure(0, weight=1)
 root.rowconfigure(3, weight=1)
 
