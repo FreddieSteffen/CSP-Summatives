@@ -78,6 +78,7 @@ ImageSize = (32, 32)
 PingImage = ImageTk.PhotoImage(Image.open("Ping.png").resize(ImageSize))
 NSLookupImage = ImageTk.PhotoImage(Image.open("NSLookup.png").resize(ImageSize))
 GlobeImage = ImageTk.PhotoImage(Image.open("Globe.png").resize(ImageSize))
+DigImage = ImageTk.PhotoImage(Image.open("Dig.png").resize(ImageSize))
 SaveImage = ImageTk.PhotoImage(Image.open("Save.png").resize(ImageSize))
 TrashImage = ImageTk.PhotoImage(Image.open("TrashBin.png").resize(ImageSize))
 
@@ -87,10 +88,12 @@ nsLookup_btn = tk.Button(button_frame, image=NSLookupImage, command=lambda:do_co
 nsLookup_btn.grid(row=2, column=2, padx=5)
 traceRoute_btn = tk.Button(button_frame, image=GlobeImage, command=lambda:do_command("Traceroute -c 1"))
 traceRoute_btn.grid(row=2, column=3, padx=5)
+Dig_btn = tk.Button(button_frame, image=DigImage, command=lambda:do_command("Dig"))
+Dig_btn.grid(row=2, column=4, padx=5)
 save_btn = tk.Button(button_frame, image=SaveImage, command=lambda:do_command("Save"))
-save_btn.grid(row=2, column=4, padx=5)
+save_btn.grid(row=2, column=5, padx=5)
 trash_btn = tk.Button(button_frame, image=TrashImage, command=lambda:do_command("Trash"))
-trash_btn.grid(row=2, column=5, padx=5)
+trash_btn.grid(row=2, column=6, padx=5)
 
 #Adds an output box to GUI.
 output_frame = tk.Frame(root, bg="#820000")
