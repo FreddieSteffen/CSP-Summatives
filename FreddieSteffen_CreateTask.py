@@ -2,31 +2,32 @@
 
 #Imports
 import tkinter as tk
-from PIL import Image, ImageTk
-import turtle as trtl
 import random as rand
+from PIL import Image, ImageTk
+import tkinter as tk
 
 #Lists
 SuitsList = ["Hearts", "Diamonds", "Spades", "Clubs"]
 NumbersList = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
+PlayerCards = []
+DealerCards = []
 
 #Variables
-CardName = rand.choice(NumbersList)
-CardSuit = rand.choice(SuitsList)
 DealerScore = 0
 PlayerScore = 0
 PlayerBet = 0
 PlayerAces = 0
 DealerAces = 0
 Chips = 100
+GameState = "menu"
 
 #Functions
 #TKinter Elements
 def Make_TKinter_Elements():
-  global root, button_frame, WelcomeLabel, QuestionLabel, StartButton, RulesButton, StartingTextName, NameEntry, PlayerName, RulesTitle, RulesLabel, BackButton, DealerLabel, PlayerLabel, HitButton, StandButton, NewGameButton, BlackjackLabel, StartingTextBet, BetEntry, PlayerBet, BetLabel, ChipsLabel, OutcomeLabel, BustLabel, CashoutButton, TotalLabel, ResetButton
+  global root, button_frame, WelcomeLabel, QuestionLabel, StartButton, RulesButton, StartingTextName, NameEntry, PlayerName, RulesTitle, RulesLabel, BackButton, DealerLabel, PlayerLabel, HitButton, StandButton, ReplayButton, BlackjackLabel, StartingTextBet, BetEntry, PlayerBet, BetLabel, ChipsLabel, OutcomeLabel, CashoutButton, TotalLabel, ResetButton, photo, HeartsImage, HeartsLabel, DiamondsImage, DiamondsLabel, ClubsImage, ClubsLabel, SpadesImage, SpadesLabel, HeartsPhoto, DiamondsPhoto, ClubsPhoto, SpadesPhoto
   root = tk.Tk()
   root.configure(bg="#8C1515")
-  root.title("Fredddie Steffen Create Task")
+  root.title("Freddie Steffen Create Task")
   root.columnconfigure(0, weight=1)
   root.rowconfigure(3, weight=1)
   button_frame = tk.Frame(root, bg="#8C1515")
@@ -49,13 +50,14 @@ def Make_TKinter_Elements():
 
   RulesTitle = tk.Label(root, text="Rules", bg="#8C1515", fg="white", font=("times", 24, "bold"), padx=10)
   RulesTitle.grid(row=0, column=0, padx=10, pady=10)
-  RulesLabel = tk.Label(root, text="The rules are that all players get cards face up, with the dealer's first card being face up and the second being face down.\n The goal is to get closer to 21 points than the dealer does without going over 21.\n If your hand goes over 21, it is called a “bust” and you lose the betted amount.\n You can “hit” to get another card, or “stand” to not get anymore cards and then the dealer will “hit” until they are over the score of 17.", bg="#8C1515", fg="white", font=("times", 12), padx=10)
+  RulesLabel = tk.Label(root, text="The rules are that all players get cards face up, with the dealer's first card being face up and the second being not shown until you stand.\n The goal is to get closer to 21 points than the dealer does without going over 21.\n If your hand goes over 21, it is called a “bust” and you lose the betted amount.\n You can “hit” to get another card, or “stand” to not get anymore cards and then the dealer will “hit” until they are over the score of 17.", bg="#8C1515", fg="white", font=("times", 12), padx=10)
   RulesLabel.grid(row=1, column=0, padx=10, pady=10)
   BackButton = tk.Button(button_frame, text="Back", command=lambda:OnClick("Back"))
   BackButton.grid(row=2, column=0, padx=5)
 
   DealerLabel = tk.Label(root, text="Dealer Score: " + str(DealerScore), bg="#8C1515", fg="white", font=("times", 12), padx=10)
   DealerLabel.grid(row=1, column=0, padx=5, pady=10)
+  #So that the PlayerLabel wont cause an error at the beggining
   PlayerName = NameEntry.get()
   PlayerLabel = tk.Label(root, text=PlayerName +" Score: " + str(PlayerScore), bg="#8C1515", fg="white", font=("times", 12), padx=10)
   PlayerLabel.grid(row=1, column=1, padx=5, pady=10)
@@ -63,8 +65,8 @@ def Make_TKinter_Elements():
   HitButton.grid(row=2, column=0, padx=5)
   StandButton = tk.Button(button_frame, text="Stand", command=lambda:OnClick("Stand"))
   StandButton.grid(row=2, column=1, padx=5)
-  NewGameButton = tk.Button(button_frame, text="New Round", command=lambda:OnClick("Start"))
-  NewGameButton.grid(row=2, column=2, padx=5)
+  ReplayButton = tk.Button(button_frame, text="Replay", command=lambda:OnClick("Start"))
+  ReplayButton.grid(row=2, column=2, padx=5)
 
   BlackjackLabel = tk.Label(root, text="Blackjack", bg="#8C1515", fg="white", font=("times", 24, "bold"), padx=10)
   BlackjackLabel.grid(row=0, column=0, padx=5, pady=10)
@@ -81,8 +83,6 @@ def Make_TKinter_Elements():
 
   OutcomeLabel = tk.Label(root, text="", bg="#8C1515", fg="white", font=("times", 12), padx=10)
   OutcomeLabel.grid(row=1, column=0, padx=10, pady=10)
-  BustLabel = tk.Label(root, text="Dealer has Lost (Bust)", bg="#8C1515", fg="white", font=("times", 12), padx=10)
-  BustLabel.grid(row=1, column=1, padx=10, pady=10)
 
   CashoutButton = tk.Button(button_frame, text="Cash Out", command=lambda:OnClick("CashOut"))
   CashoutButton.grid(row=2, column=3, padx=5)
@@ -91,7 +91,29 @@ def Make_TKinter_Elements():
   ResetButton = tk.Button(text="Reset Game", command=lambda:OnClick("Reset"))
   ResetButton.grid(row=2, column=0, padx=5)
 
+  HeartsImage = Image.open("Hearts.png")
+  HeartsPhoto = ImageTk.PhotoImage(HeartsImage)
+  photo = ImageTk.PhotoImage(HeartsImage)
+  HeartsLabel = tk.Label(root, image=photo)
+  HeartsLabel.grid(row=2, column=0, padx=5, pady=10)
+  DiamondsImage = Image.open("Diamonds.png")
+  DiamondsPhoto = ImageTk.PhotoImage(DiamondsImage)
+  photo = ImageTk.PhotoImage(DiamondsImage)
+  DiamondsLabel = tk.Label(root, image=photo)
+  DiamondsLabel.grid(row=2, column=0, padx=5, pady=10)
+  SpadesImage = Image.open("Spades.png")
+  SpadesPhoto = ImageTk.PhotoImage(SpadesImage)
+  photo = ImageTk.PhotoImage(SpadesImage)
+  SpadesLabel = tk.Label(root, image=photo)
+  SpadesLabel.grid(row=2, column=0, padx=5, pady=10)
+  ClubsImage = Image.open("Clubs.png")
+  ClubsPhoto = ImageTk.PhotoImage(ClubsImage)
+  photo = ImageTk.PhotoImage(ClubsImage)
+  ClubsLabel = tk.Label(root, image=photo)
+  ClubsLabel.grid(row=2, column=0, padx=5, pady=10)
+
 def ClearScreen():
+  ResetCards()
   WelcomeLabel.grid_remove()
   NameEntry.grid_remove()
   QuestionLabel.grid_remove()
@@ -104,16 +126,19 @@ def ClearScreen():
   PlayerLabel.grid_remove()
   HitButton.grid_remove()
   StandButton.grid_remove()
-  NewGameButton.grid_remove()
+  ReplayButton.grid_remove()
   BlackjackLabel.grid_remove()
   BetEntry.grid_remove()
   BetLabel.grid_remove()
   ChipsLabel.grid_remove()
   OutcomeLabel.grid_remove()
-  BustLabel.grid_remove()
   CashoutButton.grid_remove()
   TotalLabel.grid_remove()
   ResetButton.grid_remove()
+  HeartsLabel.grid_remove()
+  DiamondsLabel.grid_remove()
+  SpadesLabel.grid_remove()
+  ClubsLabel.grid_remove()
 
 def StartGame():
   global DealerScore, PlayerScore, PlayerBet, Chips
@@ -143,7 +168,35 @@ def CardsValues(target):
   else:
     value = int(card)
   print(f"{card} of {suit}")
-  return value
+  return value, suit
+
+def ShowCards(suit, target):
+  global HeartsPhoto, DiamondsPhoto, SpadesPhoto, ClubsPhoto, PlayerCards, DealerCards
+  if suit == "Hearts":
+    photo = HeartsPhoto
+  elif suit == "Diamonds":
+    photo = DiamondsPhoto
+  elif suit == "Spades":
+    photo = SpadesPhoto
+  else:
+    photo = ClubsPhoto
+  label = tk.Label(root, image=photo, bg="#8C1515")
+  label.image = photo
+  if target == "player":
+    label.grid(row=5, column=len(PlayerCards), padx=5)
+    PlayerCards.append(label)
+  else:
+    label.grid(row=6, column=len(DealerCards), padx=5)
+    DealerCards.append(label)
+
+def ResetCards():
+  global PlayerCards, DealerCards
+  for card in PlayerCards:
+      card.destroy()
+  for card in DealerCards:
+      card.destroy()
+  PlayerCards = []
+  DealerCards = []
 
 def clear_on_click(event):
   if event.widget == BetEntry and BetEntry.get() == StartingTextBet:
@@ -152,28 +205,31 @@ def clear_on_click(event):
     NameEntry.delete(0, tk.END)
 
 def on_enter(event):
-  global PlayerBet, Chips, PlayerScore, DealerScore, PlayerName
+  global PlayerBet, Chips, PlayerScore, DealerScore, PlayerName, GameState
+  if GameState != "betting":
+    return
   if Chips <= 0:
     StartGame()
     return
-
+  #Validation
   bet_text = BetEntry.get()
   if not bet_text.isdigit():
     BetEntry.delete(0, tk.END)
     BetEntry.insert(0, "Enter a number")
     return
-
   PlayerBet = int(bet_text)
   if PlayerBet <= 0 or PlayerBet > Chips:
     BetEntry.delete(0, tk.END)
     BetEntry.insert(0, f"Max bet: {Chips}")
     return
-
+  Chips -= PlayerBet
+  GameState = "playing"
   BetEntry.grid_remove()
   BetLabel.config(text="Bet: " + str(PlayerBet))
   ChipsLabel.config(text="Chips: " + str(Chips))
   PlayerName = NameEntry.get()
   PlayerLabel.config(text=PlayerName + "'s Score: " + str(PlayerScore))
+  NameEntry.config(state="disabled")
   DealerLabel.config(text="Dealer Score: " + str(DealerScore))
   BetLabel.grid(row=0, column=1, padx=5, pady=10)
   ChipsLabel.grid(row=0, column=2, padx=5, pady=10)
@@ -181,50 +237,55 @@ def on_enter(event):
   DealerLabel.grid(row=1, column=0, padx=5, pady=10)
   HitButton.grid(row=2, column=0, padx=5)
   StandButton.grid(row=2, column=1, padx=5)
+  HitButton.config(state="normal")
+  StandButton.config(state="normal")
+
+  for i in range(2):
+    card_val, card_suit = CardsValues("player")
+    PlayerScore += card_val
+    ShowCards(card_suit, "player")
+
+  dealer_val, dealer_suit = CardsValues("dealer")
+  DealerScore += dealer_val
+  ShowCards(dealer_suit, "dealer")
 
 def GameLogic():
-  global DealerScore, PlayerScore, Chips, PlayerBet
+  global DealerScore, PlayerScore, Chips, PlayerBet, GameState
+  GameState = "round_over"
+  HitButton.config(state="disabled")
+  StandButton.config(state="disabled")
+  ClearScreen()
   BlackjackLabel.grid(row=0, column=0, padx=5, pady=10)
-  NewGameButton.grid(row=2, column=0, padx=5)
+  ReplayButton.grid(row=2, column=0, padx=5)
   if PlayerScore > 21:
-    Chips = Chips - PlayerBet
     OutcomeLabel.config(text="You busted! Dealer wins.")
   elif DealerScore > 21:
-    Chips = Chips + PlayerBet
+    #Chips Removed Earlier
+    Chips = Chips + PlayerBet * 2
     OutcomeLabel.config(text="Dealer busted! You win.")
   elif PlayerScore > DealerScore:
-    Chips = Chips + PlayerBet
+    Chips = Chips + PlayerBet * 2
     OutcomeLabel.config(text="You win! " + str(PlayerScore) + "-" + str(DealerScore))
   elif DealerScore > PlayerScore:
-    Chips = Chips - PlayerBet
     OutcomeLabel.config(text="Dealer wins. Dealer: " + str(DealerScore) + "-" + str(PlayerScore))
   else:
+    Chips = Chips + PlayerBet
     OutcomeLabel.config(text="Push (tie).")
   OutcomeLabel.grid(row=1, column=0, padx=10, pady=10)
   ChipsLabel.config(text="Chips: " + str(Chips))
   ChipsLabel.grid(row=0, column=1, padx=5, pady=10)
   CashoutButton.grid(row=2, column=3, padx=5)
-  PlayerLabel.config(text=PlayerName + "'s Score: " + str(PlayerScore))
-  DealerLabel.config(text="Dealer Score: " + str(DealerScore))
-  ChipsLabel.config(text="Chips: " + str(Chips))
-  BetLabel.config(text="Bet: " + str(PlayerBet))
 
 def OnClick(command):
-  global PlayerScore, DealerScore, Chips, PlayerName, PlayerAces, DealerAces, PlayerBet
+  global PlayerScore, DealerScore, Chips, PlayerName, PlayerAces, DealerAces, PlayerBet, GameState
   if command == "Start":
+    GameState = "betting"
     ClearScreen()
     PlayerScore = 0
     DealerScore = 0
     PlayerBet = 0
     PlayerAces = 0
     DealerAces = 0
-    for i in range(2):
-      card_val = CardsValues("player")
-      PlayerScore += card_val
-
-    dealer_card_val = CardsValues("dealer")
-    DealerScore += dealer_card_val
-    print("Dealer Score: " + str(DealerScore))
     BlackjackLabel.grid(row=0, column=0, padx=5, pady=10)
     BetEntry.grid(row=1, column=0, padx=10, pady=10)
 
@@ -242,50 +303,50 @@ def OnClick(command):
     RulesButton.grid(row=3, column=2, padx=5)
 
   if command == "Hit":
-    PlayerScore += CardsValues("player")
-    PlayerLabel.config(text=PlayerName + "'s Score: " + str(PlayerScore))
-    print(PlayerScore)
+    card_val, card_suit = CardsValues("player")
+    PlayerScore += card_val
+    ShowCards(card_suit, "player")
     print("Hit")
     if PlayerScore > 21:
       while PlayerAces > 0 and PlayerScore > 21:
         PlayerScore -= 10
         PlayerAces -= 1
       if PlayerScore > 21:
-        OutcomeLabel.config(text=f"{PlayerName} Busted! Dealer Wins.")
-        Chips -= PlayerBet
-        ChipsLabel.config(text="Chips: " + str(Chips))
+        GameLogic()
         return
+    PlayerLabel.config(text=PlayerName + "'s Score: " + str(PlayerScore))
     print(PlayerName + " Score: " + str(PlayerScore))
 
   if command == "Stand":
+    if GameState != "playing":
+      return
     while DealerScore < 17:
-      card_val = CardsValues("dealer")
+      card_val, card_suit = CardsValues("dealer")
       DealerScore += card_val
+      ShowCards(card_suit, "dealer")
       while DealerScore > 21 and DealerAces > 0:
-        DealerScore -= 10
-        DealerAces -= 1
+          DealerScore -= 10
+          DealerAces -= 1
       DealerLabel.config(text="Dealer Score: " + str(DealerScore))
     if DealerScore > 21:
         ClearScreen()
-        BustLabel.config(text=PlayerName + "Wins! Dealer Bust (" + str(DealerScore) + ")")
-        BustLabel.grid(row=1, column=1, padx=10, pady=10)
-        Chips = Chips + PlayerBet
         GameLogic()
     else:
         GameLogic()
 
   if command == "CashOut":
+    GameState = "cashout"
     ClearScreen()
     print("Cash Out")
     BlackjackLabel.grid(row=0, column=0, padx=5, pady=10)
-    PlayerName = NameEntry.get()
     TotalLabel.config(text=PlayerName + " total Chips: " + str(Chips))
     TotalLabel.grid(row=1, column=0, padx=5, pady=10)
     ResetButton.grid(row=2, column=0, padx=5)
   
   if command == "Reset":
     ClearScreen()
-    print("Reseted Game")
+    NameEntry.config(state="normal")
+    print("Reset Game")
     StartGame()
 
 #General Game
