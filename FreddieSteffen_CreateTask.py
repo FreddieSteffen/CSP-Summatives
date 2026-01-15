@@ -26,7 +26,7 @@ SMALL_FONT = ("Times New Roman", 16)
 
 #Functions
 def Make_TKinter_Elements():
-  global root, TABLE_GREEN, TitleFrame, InfoFrame, TableFrame, ButtonFrame, OutcomeFrame, GameInfoFrame, DealerCardsFrame, PlayerCardsFrame, WelcomeLabel, NameEntry, QuestionLabel, StartButton, RulesButton, RulesTitle, RulesLabel, BackButton, CardValueLabel, DealerLabel, PlayerName, PlayerLabel, HitButton, StandButton, ReplayButton, BlackjackLabel, BetEntry, BetLabel, ChipsLabel, OutcomeLabel, CashoutButton, TotalLabel, ResetButton, HeartsImage, HeartsPhoto, HeartsLabel, DiamondsImage, DiamondsPhoto, DiamondsLabel, SpadesImage, SpadesPhoto, SpadesLabel, ClubsImage, ClubsPhoto, ClubsLabel, photo
+  global root, TABLE_GREEN, TitleFrame, InfoFrame, TableFrame, ButtonFrame, OutcomeFrame, GameInfoFrame, DealerCardsFrame, PlayerCardsFrame, WelcomeLabel, NameEntry, QuestionLabel, StartButton, RulesButton, RulesTitle, RulesLabel, BackButton, CardValueLabel, DealerLabel, PlayerName, PlayerLabel, HitButton, StandButton, ReplayButton, BlackjackLabel, BetEntry, BetLabel, ChipsLabel, OutcomeLabel, CashoutButton, TotalLabel, ResetButton, HeartsImage, HeartsPhoto, HeartsLabel, DiamondsImage, DiamondsPhoto, DiamondsLabel, SpadesImage, SpadesPhoto, SpadesLabel, ClubsImage, ClubsPhoto, ClubsLabel, photo, StartingTextName, StartingTextBet
   #Frames for things so they don't overlap
   root = tk.Tk()
   root.configure(bg="#8C1515")
@@ -257,9 +257,13 @@ def OnEnter(event):
   global PlayerBet, Chips, PlayerScore, DealerScore, PlayerName, GameState
   if GameState != "betting":
     return
-  if Chips <= 0:
+  if Chips <= 0: 
+    ClearScreen()
+    ResetCards()
+    NameEntry.config(state="normal")
+    PlayerAces = 0
+    DealerAces = 0
     StartGame()
-    return
   #Validation
   BetText = BetEntry.get()
   if not BetText.isdigit():
@@ -269,7 +273,7 @@ def OnEnter(event):
   PlayerBet = int(BetText)
   if PlayerBet <= 0 or PlayerBet > Chips:
     BetEntry.delete(0, tk.END)
-    BetEntry.insert(0, f"Max bet: {Chips}")
+    BetEntry.insert(0, text="Max bet: " + str(Chips))
     return
   Chips = Chips - PlayerBet
   GameState = "playing"
@@ -405,7 +409,7 @@ def OnClick(command):
     HitButton.grid_remove()
     StandButton.grid_remove()
     BlackjackLabel.grid(row=0, column=0, padx=5, pady=10)
-    TotalLabel.config(text=PlayerName + " total Chips: " + str(Chips))
+    TotalLabel.config(text=PlayerName + "'s total Chips: " + str(Chips))
     TotalLabel.grid(row=1, column=0, padx=5, pady=10)
     ResetButton.grid(row=3, column=0, padx=5)
   
@@ -421,7 +425,7 @@ def OnClick(command):
 #General Game
 Make_TKinter_Elements()
 StartGame()
-root.bind("<Escape>", lambda e: root.attributes("-fullscreen", False))
+root.bind("<Escape>", lambda e:root.attributes("-fullscreen", False))
 
 #Keeping the game there
 root.mainloop()
